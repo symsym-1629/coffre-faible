@@ -18,14 +18,10 @@ static char getPressedChar(void) {
 	switch(press_key_event)
 	{
 		case NO_KEY:
-			return("");
-			break;
 		case MANY_KEYS:
-			return("");
-			break;
+			return(0);
 		default:
 			return(press_key_event);
-			break;
 	}
 }
 
@@ -43,10 +39,10 @@ void initKeyboard(void) {
 
 
 char keyboardMain(void) {
-	char caractere;
+
 	if(!t) {
 		t = 10;
-		caractere = getPressedChar();
-		return(caractere);
+		return getPressedChar();
 	}
+	return(0);
 }
