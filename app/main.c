@@ -77,7 +77,7 @@ int main(void)
 	BSP_GPIO_pin_config(GPIO_GACHE, PIN_GACHE, GPIO_MODE_OUTPUT_PP,GPIO_NOPULL,GPIO_SPEED_FREQ_HIGH,GPIO_NO_AF);
 
 	// Verrouillage coffre
-	HAL_GPIO_WritePin(GPIO_GACHE, PIN_GACHE, 1);
+	HAL_GPIO_WritePin(GPIO_GACHE, PIN_GACHE, 0);
 	//HAL_GPIO_WritePin(GPIO_GACHE, PIN_GACHE, 0);
 
 	BSP_WS2812_init();
@@ -103,6 +103,9 @@ int main(void)
 					if (memcmp(code_input, valid_code, 4) == 0) {
 						valid = 1;
 					} else {
+						HAL_Delay(1000);
+						matrice_color(WS2812_COLOR_LIGHT_RED);
+						HAL_Delay(1000);
 						code_length=0;
 						matrice_init();
 					}
@@ -110,17 +113,21 @@ int main(void)
 			}
 		}
 		// code bon : ouverture du coffre
-		HAL_GPIO_WritePin(GPIO_GACHE, PIN_GACHE, 0);
+		HAL_GPIO_WritePin(GPIO_GACHE, PIN_GACHE, 1);
 		// bip buzzer de 0.1 sec
 		write_BUZZER(true);
 		HAL_Delay(BIP_DELAY);
 		write_BUZZER(false);
 		matrice_color(WS2812_COLOR_LIGHT_GREEN);
 
-		while (read_RUPTEUR()) // attente de l'ouverture de la porte
-		while (!read_RUPTEUR()) // attente de la fermeture de la porte
+		while (read_RUPTEUR()){
+			HAL_Delay(BIP_DELAY);
+		} // attente de l'ouverture de la porte
+		while (!read_RUPTEUR()){
+			HAL_Delay(BIP_DELAY);
+		} // attente de la fermeture de la porte
 
-		HAL_GPIO_WritePin(GPIO_GACHE, PIN_GACHE, 1); // fermeture du coffre
+		HAL_GPIO_WritePin(GPIO_GACHE, PIN_GACHE, 0); // fermeture du coffre
         code_length = 0;
         valid = 0;
 		matrice_init();

@@ -110,8 +110,7 @@ static void conversion(uint32_t *pixels)
     for (int mat = 0; mat < 2; mat++) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                int led_col = (i % 2 == 0) ? j : (7 - j);
-                pixels[mat * 64 + i * 8 + j] = matrice_full[mat][i][led_col];
+            	pixels[mat * 64 + i * 8 + j] = matrice_full[mat][i][j];
             }
         }
     }
